@@ -4,13 +4,15 @@ Game::Game(const int& width, const int& height) : screen(width, height) {}
 
 graphics::Image& Game::GetGameScreen() { return screen; }
 
-std::vector<Opponent>& Game::GetOpponents() { return OpponentsList; }
+std::vector<std::unique_ptr<Opponent>>& Game::GetOpponents() {
+  return OpponentsList;
+}
 
-std::vector<OpponentProjectile>& Game::GetOpponentProjectiles() {
+std::vector<std::unique_ptr<OpponentProjectile>>& Game::GetOpponentProjectiles() {
   return OpponentProjectilesList;
 }
 
-std::vector<PlayerProjectile>& Game::GetPlayerProjectiles() {
+std::vector<std::unique_ptr<PlayerProjectile>>& Game::GetPlayerProjectiles() {
   return PlayerProjectilesList;
 }
 
@@ -19,30 +21,18 @@ Player& Game::GetPlayer() { return player; }
 void Game::CreateOpponents() {
   // Would be easily scalable with vector to store coordinates
   // Just like with drawing the sprites
-  Opponent opponent1 = Opponent(50, 50);
-  OpponentsList.push_back(opponent1);
-  Opponent opponent2 = Opponent(150, 50);
-  OpponentsList.push_back(opponent2);
-}
-
-void Game::CreateOpponentProjectiles() {
-  OpponentProjectile opponent_projectile1 = OpponentProjectile(50, 150);
-  OpponentProjectilesList.push_back(opponent_projectile1);
-  OpponentProjectile opponent_projectile2 = OpponentProjectile(150, 150);
-  OpponentProjectilesList.push_back(opponent_projectile2);
-}
-
-void Game::CreatePlayerProjectiles() {
-  PlayerProjectile player_projectile1 = PlayerProjectile(50, 200);
-  PlayerProjectilesList.push_back(player_projectile1);
-  PlayerProjectile player_projectile2 = PlayerProjectile(150, 200);
-  PlayerProjectilesList.push_back(player_projectile2);
+  std::unique_ptr<Opponent> opponent1 = make_unique<Opponent>(50, 50);
+  OpponentsList.push_back(std::move(opponent1));
+  std::unique_ptr<Opponent> opponent2 = make_unique<Opponent>(150, 50);
+  OpponentsList.push_back(std::move(opponent2));
+  std::unique_ptr<Opponent> opponent3 = make_unique<Opponent>(250, 50);
+  OpponentsList.push_back(std::move(opponent3));
+  std::unique_ptr<Opponent> opponent4 = make_unique<Opponent>(350, 50);
+  OpponentsList.push_back(std::move(opponent4));
 }
 
 void Game::Init() {
   CreateOpponents();
-  CreateOpponentProjectiles();
-  CreatePlayerProjectiles();
   player.SetX(50);
   player.SetY(350);
   screen.AddMouseEventListener(*this);
@@ -51,23 +41,27 @@ void Game::Init() {
 
 void Game::UpdateScreen() {
   screen.DrawRectangle(0, 0, 800, 600, 0, 0, 0);
+  screen.DrawText(0, 0, std::to_string(score_), 12, 0, 0, 0);
   for (int i = 0; i < OpponentsList.size(); i++) {
-    if (OpponentsList[i].GetIsActive()) {
-      OpponentsList[i].Draw(screen);
+    if (OpponentsList[i]->GetIsActive()) {
+      OpponentsList[i]->Draw(screen);
     }
   }
   for (int i = 0; i < OpponentProjectilesList.size(); i++) {
-    if (OpponentProjectilesList[i].GetIsActive()) {
-      OpponentProjectilesList[i].Draw(screen);
+    if (OpponentProjectilesList[i]->GetIsActive()) {
+      OpponentProjectilesList[i]->Draw(screen);
     }
   }
   for (int i = 0; i < PlayerProjectilesList.size(); i++) {
-    if (PlayerProjectilesList[i].GetIsActive()) {
-      PlayerProjectilesList[i].Draw(screen);
+    if (PlayerProjectilesList[i]->GetIsActive()) {
+      PlayerProjectilesList[i]->Draw(screen);
     }
   }
   if (player.GetIsActive()) {
     player.Draw(screen);
+  }
+  if (has_lost_) {
+    screen.DrawText(375, 275, "Game Over", 25, 0, 0, 0);
   }
 }
 
@@ -75,18 +69,18 @@ void Game::Start() { screen.ShowUntilClosed(); }
 
 void Game::MoveGameElements() {
   for (int i = 0; i < OpponentsList.size(); i++) {
-    if (OpponentsList[i].GetIsActive()) {
-      OpponentsList[i].Move(screen);
+    if (OpponentsList[i]->GetIsActive()) {
+      OpponentsList[i]->Move(screen);
     }
   }
   for (int i = 0; i < OpponentProjectilesList.size(); i++) {
-    if (OpponentProjectilesList[i].GetIsActive()) {
-      OpponentProjectilesList[i].Move(screen);
+    if (OpponentProjectilesList[i]->GetIsActive()) {
+      OpponentProjectilesList[i]->Move(screen);
     }
   }
   for (int i = 0; i < PlayerProjectilesList.size(); i++) {
-    if (PlayerProjectilesList[i].GetIsActive()) {
-      PlayerProjectilesList[i].Move(screen);
+    if (PlayerProjectilesList[i]->GetIsActive()) {
+      PlayerProjectilesList[i]->Move(screen);
     }
   }
 }
@@ -94,30 +88,35 @@ void Game::MoveGameElements() {
 void Game::FilterIntersections() {
   // Collision between Player and Opponents
   for (int i = 0; i < OpponentsList.size(); i++) {
-    if (OpponentsList[i].GetIsActive()) {
-      if (player.IntersectsWith(OpponentsList[i])) {
+    if (OpponentsList[i]->GetIsActive()) {
+      if (player.IntersectsWith((OpponentsList[i].get()))) {
         player.SetIsActive(false);
-        OpponentsList[i].SetIsActive(false);
+        OpponentsList[i]->SetIsActive(false);
+        has_lost_ = true;
       }
     }
   }
   // Collision between Player and OpponentProjectiles
   for (int i = 0; i < OpponentProjectilesList.size(); i++) {
-    if (OpponentProjectilesList[i].GetIsActive()) {
-      if (player.IntersectsWith(OpponentProjectilesList[i])) {
+    if (OpponentProjectilesList[i]->GetIsActive()) {
+      if (player.IntersectsWith((OpponentProjectilesList[i].get()))) {
         player.SetIsActive(false);
-        OpponentProjectilesList[i].SetIsActive(false);
+        OpponentProjectilesList[i]->SetIsActive(false);
+        has_lost_ = true;
       }
     }
   }
   // Collision between PlayerProjectiles and Opponents
   for (int i = 0; i < PlayerProjectilesList.size(); i++) {
-    if (PlayerProjectilesList[i].GetIsActive()) {
+    if (PlayerProjectilesList[i]->GetIsActive()) {
       for (int j = 0; j < OpponentsList.size(); j++) {
-        if (OpponentsList[j].GetIsActive()) {
-          if (PlayerProjectilesList[i].IntersectsWith(OpponentsList[j])) {
-            PlayerProjectilesList[i].SetIsActive(false);
-            OpponentsList[j].SetIsActive(false);
+        if (OpponentsList[j]->GetIsActive()) {
+          if (PlayerProjectilesList[i]->IntersectsWith((OpponentsList[j].get()))) {
+            PlayerProjectilesList[i]->SetIsActive(false);
+            OpponentsList[j]->SetIsActive(false);
+            if (!player.HasLost()) {
+              score_++;
+            }
           }
         }
       }
@@ -126,8 +125,13 @@ void Game::FilterIntersections() {
 }
 
 void Game::OnAnimationStep() {
+  if (OpponentsList.size() == 0) {
+    CreateOpponents();
+  }
   MoveGameElements();
+  LaunchProjectiles();
   FilterIntersections();
+  RemoveInactive();
   UpdateScreen();
   screen.Flush();
 }
@@ -141,6 +145,44 @@ void Game::OnMouseEvent(const graphics::MouseEvent& event) {
           (player.GetHeight() / 2) > event.GetY())) {
       player.SetX(event.GetX() - (player.GetWidth() / 2));
       player.SetY(event.GetY() - (player.GetHeight() / 2));
+    }
+  }
+  if (event.GetMouseAction() == graphics::MouseAction::kPressed) {
+    if (!(event.GetX() + 5 > screen.GetWidth() || 5 > event.GetX() ||
+          event.GetY() + 5 > screen.GetHeight() || 5 > event.GetY())) {
+      std::unique_ptr<PlayerProjectile> projectile = make_unique<PlayerProjectile> (event.GetX(), event.GetY());
+      PlayerProjectilesList.push_back(std::move(projectile));
+  }
+}
+
+void Game::GetScore() const { return score_; }
+
+void Game::HasLost() const { return has_lost_; }
+
+void Game::LaunchProjectiles() {
+  for (int i = 0; i < OpponentsList.size(); i++) {
+    OpponentsList[i]->LaunchProjectile()
+    if (OpponentsList[i]->LaunchProjectile() != nullptr) {
+      // Potential error: creating 2 projectiles
+      OpponentProjectilesList.push_back(std::move(OpponentsList[i]->LaunchProjectile()));
+    }
+  }
+}
+
+void Game::RemoveInactive() {
+  for (int i = (OpponentsList.size() - 1); i >= 0; i--) {
+    if (!(OpponentsList[i]->GetIsActive())) {
+      OpponentsList.erase(i);
+    }
+  }
+  for (int i = (OpponentProjectilesList.size() - 1); i >= 0; i--) {
+    if (!(OpponentProjectilesList[i]->GetIsActive())) {
+      OpponentProjectilesList.erase(i);
+    }
+  }
+  for (int i = (PlayerProjectilesList.size() - 1); i >= 0; i--) {
+    if (!(PlayerProjectilesList[i]->GetIsActive())) {
+      PlayerProjectilesList.erase(i);
     }
   }
 }

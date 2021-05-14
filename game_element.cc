@@ -21,11 +21,11 @@ bool GameElement::GetIsActive() const { return is_active_; }
 
 void GameElement::SetIsActive(const bool& is_active) { is_active_ = is_active; }
 
-bool GameElement::IntersectsWith(const GameElement& object) {
-  return !(GetX() > object.GetX() + object.GetWidth() ||
-           object.GetX() > GetX() + GetWidth() ||
-           GetY() > object.GetY() + object.GetHeight() ||
-           object.GetY() > GetY() + GetHeight());
+bool GameElement::IntersectsWith(GameElement* object) {
+  return !(GetX() > object->GetX() + object->GetWidth() ||
+           object->GetX() > GetX() + GetWidth() ||
+           GetY() > object->GetY() + object->GetHeight() ||
+           object->GetY() > GetY() + GetHeight());
 }
 
 bool GameElement::IsOutOfBounds(const graphics::Image& screen) {

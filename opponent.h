@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 #include <vector>
 
 #include "cpputils/graphics/image.h"
@@ -14,6 +15,10 @@ class Opponent : public GameElement {
            const int& height = 50);
   void Draw(graphics::Image& screen) override;
   void Move(const graphics::Image& screen) override;
+  std::unique_ptr<OpponentProjectile> LaunchProjectile();
+
+ private:
+  int launch_projectile_timer_ = 0;
 };
 
 class OpponentProjectile : public GameElement {

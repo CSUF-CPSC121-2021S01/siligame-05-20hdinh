@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 #include <vector>
 
 #include "cpputils/graphics/image.h"
@@ -21,8 +22,6 @@ class Game : public graphics::AnimationEventListener,
   std::vector<PlayerProjectile>& GetPlayerProjectiles();
   Player& GetPlayer();
   void CreateOpponents();
-  void CreateOpponentProjectiles();
-  void CreatePlayerProjectiles();
   void Init();
   void UpdateScreen();
   void Start();
@@ -30,13 +29,19 @@ class Game : public graphics::AnimationEventListener,
   void FilterIntersections();
   void OnAnimationStep() override;
   void OnMouseEvent(const graphics::MouseEvent& event) override;
+  int GetScore() const;
+  bool HasLost() const;
+  void LaunchProjectiles();
+  void RemoveInactive();
 
  private:
   graphics::Image screen;
-  std::vector<Opponent> OpponentsList;
-  std::vector<OpponentProjectile> OpponentProjectilesList;
-  std::vector<PlayerProjectile> PlayerProjectilesList;
+  std::vector<std::unique_ptr<Opponent>> OpponentsList;
+  std::vector<std::unique_ptr<OpponentProjectile>> OpponentProjectilesList;
+  std::vector<std::unique_ptr<PlayerProjectile>> PlayerProjectilesList;
   Player player = Player();
+  int score_ = 0;
+  bool has_lost_ = false;
 };
 
 #endif
