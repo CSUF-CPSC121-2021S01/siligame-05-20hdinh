@@ -1,0 +1,81 @@
+---
+MainSourceFile:  '/home/student/Documents/siligame-05-20hdinh/player.cc'
+Diagnostics:
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         'use of undeclared identifier ''OpponentProjectile'''
+      FilePath:        './opponent.h'
+      FileOffset:      449
+      Replacements:    []
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         'use of undeclared identifier ''make_unique'''
+      FilePath:        game.cc
+      FileOffset:      698
+      Replacements:    []
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         'use of undeclared identifier ''make_unique'''
+      FilePath:        game.cc
+      FileOffset:      818
+      Replacements:    []
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         'use of undeclared identifier ''make_unique'''
+      FilePath:        game.cc
+      FileOffset:      939
+      Replacements:    []
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         'use of undeclared identifier ''make_unique'''
+      FilePath:        game.cc
+      FileOffset:      1060
+      Replacements:    []
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         'no member named ''HasLost'' in ''Player'''
+      FilePath:        game.cc
+      FileOffset:      3851
+      Replacements:    []
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         'use of undeclared identifier ''make_unique'''
+      FilePath:        game.cc
+      FileOffset:      5003
+      Replacements:    []
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         function definition is not allowed here
+      FilePath:        game.cc
+      FileOffset:      5160
+      Replacements:    []
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         function definition is not allowed here
+      FilePath:        game.cc
+      FileOffset:      5207
+      Replacements:    []
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         function definition is not allowed here
+      FilePath:        game.cc
+      FileOffset:      5261
+      Replacements:    []
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         function definition is not allowed here
+      FilePath:        game.cc
+      FileOffset:      5594
+      Replacements:    []
+  - DiagnosticName:  clang-diagnostic-error
+    DiagnosticMessage:
+      Message:         'expected ''}'''
+      FilePath:        game.cc
+      FileOffset:      6083
+      Replacements:    []
+    Notes:
+      - Message:         'to match this ''{'''
+        FilePath:        game.cc
+        FileOffset:      4226
+        Replacements:    []
+...

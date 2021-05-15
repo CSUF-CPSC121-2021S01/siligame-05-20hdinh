@@ -21,13 +21,13 @@ Player& Game::GetPlayer() { return player; }
 void Game::CreateOpponents() {
   // Would be easily scalable with vector to store coordinates
   // Just like with drawing the sprites
-  std::unique_ptr<Opponent> opponent1 = make_unique<Opponent>(50, 50);
+  std::unique_ptr<Opponent> opponent1 = std::make_unique<Opponent>(50, 50);
   OpponentsList.push_back(std::move(opponent1));
-  std::unique_ptr<Opponent> opponent2 = make_unique<Opponent>(150, 50);
+  std::unique_ptr<Opponent> opponent2 = std::make_unique<Opponent>(150, 50);
   OpponentsList.push_back(std::move(opponent2));
-  std::unique_ptr<Opponent> opponent3 = make_unique<Opponent>(250, 50);
+  std::unique_ptr<Opponent> opponent3 = std::make_unique<Opponent>(250, 50);
   OpponentsList.push_back(std::move(opponent3));
-  std::unique_ptr<Opponent> opponent4 = make_unique<Opponent>(350, 50);
+  std::unique_ptr<Opponent> opponent4 = std::make_unique<Opponent>(350, 50);
   OpponentsList.push_back(std::move(opponent4));
 }
 
@@ -114,7 +114,7 @@ void Game::FilterIntersections() {
           if (PlayerProjectilesList[i]->IntersectsWith((OpponentsList[j].get()))) {
             PlayerProjectilesList[i]->SetIsActive(false);
             OpponentsList[j]->SetIsActive(false);
-            if (!player.HasLost()) {
+            if (!HasLost()) {
               score_++;
             }
           }
@@ -150,14 +150,15 @@ void Game::OnMouseEvent(const graphics::MouseEvent& event) {
   if (event.GetMouseAction() == graphics::MouseAction::kPressed) {
     if (!(event.GetX() + 5 > screen.GetWidth() || 5 > event.GetX() ||
           event.GetY() + 5 > screen.GetHeight() || 5 > event.GetY())) {
-      std::unique_ptr<PlayerProjectile> projectile = make_unique<PlayerProjectile> (event.GetX(), event.GetY());
+      std::unique_ptr<PlayerProjectile> projectile = std::make_unique<PlayerProjectile> (event.GetX(), event.GetY());
       PlayerProjectilesList.push_back(std::move(projectile));
+    }
   }
 }
 
-void Game::GetScore() const { return score_; }
+int Game::GetScore() const { return score_; }
 
-void Game::HasLost() const { return has_lost_; }
+bool Game::HasLost() const { return has_lost_; }
 
 void Game::LaunchProjectiles() {
   for (int i = 0; i < OpponentsList.size(); i++) {
