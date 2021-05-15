@@ -2,8 +2,8 @@
 #define GAME_H
 
 #include <iostream>
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "cpputils/graphics/image.h"

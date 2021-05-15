@@ -8,7 +8,8 @@ std::vector<std::unique_ptr<Opponent>>& Game::GetOpponents() {
   return OpponentsList;
 }
 
-std::vector<std::unique_ptr<OpponentProjectile>>& Game::GetOpponentProjectiles() {
+std::vector<std::unique_ptr<OpponentProjectile>>&
+Game::GetOpponentProjectiles() {
   return OpponentProjectilesList;
 }
 
@@ -111,7 +112,8 @@ void Game::FilterIntersections() {
     if (PlayerProjectilesList[i]->GetIsActive()) {
       for (int j = 0; j < OpponentsList.size(); j++) {
         if (OpponentsList[j]->GetIsActive()) {
-          if (PlayerProjectilesList[i]->IntersectsWith((OpponentsList[j].get()))) {
+          if (PlayerProjectilesList[i]->IntersectsWith(
+                  (OpponentsList[j].get()))) {
             PlayerProjectilesList[i]->SetIsActive(false);
             OpponentsList[j]->SetIsActive(false);
             if (!HasLost()) {
@@ -150,7 +152,8 @@ void Game::OnMouseEvent(const graphics::MouseEvent& event) {
   if (event.GetMouseAction() == graphics::MouseAction::kPressed) {
     if (!(event.GetX() + 5 > screen.GetWidth() || 5 > event.GetX() ||
           event.GetY() + 5 > screen.GetHeight() || 5 > event.GetY())) {
-      std::unique_ptr<PlayerProjectile> projectile = std::make_unique<PlayerProjectile> (event.GetX(), event.GetY());
+      std::unique_ptr<PlayerProjectile> projectile =
+          std::make_unique<PlayerProjectile>(event.GetX(), event.GetY());
       PlayerProjectilesList.push_back(std::move(projectile));
     }
   }
@@ -162,10 +165,11 @@ bool Game::HasLost() const { return has_lost_; }
 
 void Game::LaunchProjectiles() {
   for (int i = 0; i < OpponentsList.size(); i++) {
-    OpponentsList[i]->LaunchProjectile()
+    OpponentsList[i]->LaunchProjectile();
     if (OpponentsList[i]->LaunchProjectile() != nullptr) {
       // Potential error: creating 2 projectiles
-      OpponentProjectilesList.push_back(std::move(OpponentsList[i]->LaunchProjectile()));
+      OpponentProjectilesList.push_back(
+          std::move(OpponentsList[i]->LaunchProjectile()));
     }
   }
 }
@@ -173,17 +177,17 @@ void Game::LaunchProjectiles() {
 void Game::RemoveInactive() {
   for (int i = (OpponentsList.size() - 1); i >= 0; i--) {
     if (!(OpponentsList[i]->GetIsActive())) {
-      OpponentsList.erase(i);
+      OpponentsList.erase(OpponentsList.begin() + i);
     }
   }
   for (int i = (OpponentProjectilesList.size() - 1); i >= 0; i--) {
     if (!(OpponentProjectilesList[i]->GetIsActive())) {
-      OpponentProjectilesList.erase(i);
+      OpponentProjectilesList.erase(OpponentProjectilesList.begin() + i);
     }
   }
   for (int i = (PlayerProjectilesList.size() - 1); i >= 0; i--) {
     if (!(PlayerProjectilesList[i]->GetIsActive())) {
-      PlayerProjectilesList.erase(i);
+      PlayerProjectilesList.erase(PlayerProjectilesList.begin() + i);
     }
   }
 }

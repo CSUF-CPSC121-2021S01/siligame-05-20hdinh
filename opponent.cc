@@ -24,7 +24,7 @@ void Opponent::Move(const graphics::Image& screen) {
 
 std::unique_ptr<OpponentProjectile> Opponent::LaunchProjectile() {
   if (launch_projectile_timer_ == 9) {
-    return std::make_unique<OpponentProjectile> (GetX(), GetY());
+    return std::make_unique<OpponentProjectile>(GetX(), GetY());
   } else {
     if (launch_projectile_timer_ < 9) {
       launch_projectile_timer_++;

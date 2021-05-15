@@ -2,12 +2,20 @@
 #define OPPONENT_H
 
 #include <iostream>
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "cpputils/graphics/image.h"
 #include "game_element.h"
+
+class OpponentProjectile : public GameElement {
+ public:
+  OpponentProjectile(const int& x = 0, const int& y = 0, const int& width = 5,
+                     const int& height = 5);
+  void Draw(graphics::Image& screen) override;
+  void Move(const graphics::Image& screen) override;
+};
 
 class Opponent : public GameElement {
  public:
@@ -19,14 +27,6 @@ class Opponent : public GameElement {
 
  private:
   int launch_projectile_timer_ = 0;
-};
-
-class OpponentProjectile : public GameElement {
- public:
-  OpponentProjectile(const int& x = 0, const int& y = 0, const int& width = 5,
-                     const int& height = 5);
-  void Draw(graphics::Image& screen) override;
-  void Move(const graphics::Image& screen) override;
 };
 
 #endif
