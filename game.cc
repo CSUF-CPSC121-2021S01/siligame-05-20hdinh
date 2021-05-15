@@ -116,7 +116,7 @@ void Game::FilterIntersections() {
                   (OpponentsList[j].get()))) {
             PlayerProjectilesList[i]->SetIsActive(false);
             OpponentsList[j]->SetIsActive(false);
-            if (!HasLost()) {
+            if (player.GetIsActive()) {
               score_++;
             }
           }
