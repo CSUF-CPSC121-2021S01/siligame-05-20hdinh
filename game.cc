@@ -42,7 +42,7 @@ void Game::Init() {
 
 void Game::UpdateScreen() {
   screen.DrawRectangle(0, 0, 800, 600, 0, 0, 0);
-  screen.DrawText(0, 0, std::to_string(score_), 12, 255, 255, 255);
+  screen.DrawText(0, 0, std::to_string(score_), 50, 255, 255, 255);
   for (int i = 0; i < OpponentsList.size(); i++) {
     if (OpponentsList[i]->GetIsActive()) {
       OpponentsList[i]->Draw(screen);
@@ -62,7 +62,7 @@ void Game::UpdateScreen() {
     player.Draw(screen);
   }
   if (has_lost_) {
-    screen.DrawText(300, 250, "Game Over", 25, 255, 255, 255);
+    screen.DrawText(300, 250, "Game Over", 50, 255, 255, 255);
   }
 }
 

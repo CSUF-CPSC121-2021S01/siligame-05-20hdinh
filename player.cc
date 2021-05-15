@@ -28,8 +28,8 @@ void PlayerProjectile::Draw(graphics::Image& screen) {
 }
 
 void PlayerProjectile::Move(const graphics::Image& screen) {
-  SetX(GetX() - 3);
-  SetY(GetY() - 3);
+  // SetX(GetX() - 3);
+  SetY(GetY() - 5);
   if (IsOutOfBounds(screen)) {
     SetIsActive(false);
   }

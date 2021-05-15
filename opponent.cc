@@ -15,7 +15,7 @@ void Opponent::Draw(graphics::Image& screen) {
 }
 
 void Opponent::Move(const graphics::Image& screen) {
-  SetX(GetX() + 1);
+  SetX(GetX() + 3);
   SetY(GetY() + 1);
   if (IsOutOfBounds(screen)) {
     SetIsActive(false);
@@ -23,13 +23,13 @@ void Opponent::Move(const graphics::Image& screen) {
 }
 
 std::unique_ptr<OpponentProjectile> Opponent::LaunchProjectile() {
-  if (launch_projectile_timer_ == 20) {
+  if (launch_projectile_timer_ == 60) {
     launch_projectile_timer_ = 0;
     return std::make_unique<OpponentProjectile>(GetX(), GetY());
-  } else if (launch_projectile_timer_ == 19) {
+  } else if (launch_projectile_timer_ == 59) {
     launch_projectile_timer_++;
     return std::make_unique<OpponentProjectile>(GetX(), GetY());
-  } else if (launch_projectile_timer_ < 19) {
+  } else if (launch_projectile_timer_ < 59) {
     launch_projectile_timer_++;
   }
   return nullptr;
@@ -45,8 +45,8 @@ void OpponentProjectile::Draw(graphics::Image& screen) {
 }
 
 void OpponentProjectile::Move(const graphics::Image& screen) {
-  SetX(GetX() + 3);
-  SetY(GetY() + 3);
+  // SetX(GetX() + 3);
+  SetY(GetY() + 5);
   if (IsOutOfBounds(screen)) {
     SetIsActive(false);
   }
